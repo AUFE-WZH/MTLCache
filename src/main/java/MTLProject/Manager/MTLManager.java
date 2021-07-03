@@ -27,8 +27,8 @@ public class MTLManager {
         return MTLManagerInstance.instance;
     }
 
-    public Object registerClass(Object target) {
-        Object proxyInstance = new ProxyFactory(target).getProxyInstance();
+    public Object registerCacheClass(Object target) {
+        Object proxyInstance = new MTLProxy(target).getProxyInstance();
         classInstanceSet.add(target.getClass());
         return proxyInstance;
     }

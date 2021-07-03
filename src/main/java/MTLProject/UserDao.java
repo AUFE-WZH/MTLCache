@@ -22,28 +22,4 @@ public class UserDao {
 
         return result;
     }
-
-    @Test
-    public void test() {
-        MTLManager mtlManager = MTLManager.getInstance();
-        UserDao proxy = (UserDao) mtlManager.registerClass(new UserDao());
-        System.out.println(mtlManager.getAllManagedFunctionNumber());
-        proxy.save();
-        proxy.save();
-        System.out.println(mtlManager.getAllManagedFunctionNumber());
-        proxy.add(2, 4);
-        proxy.add(2, 4);
-        proxy.add(10000, 100000);
-        proxy.add(10000, 100000);
-        proxy.add(10000, 100000);
-        System.out.println(mtlManager.getAllManagedFunctionNumber());
-        proxy.fun1();
-        proxy.fun1();
-        proxy.fun1();
-        System.out.println(mtlManager.getAllManagedFunctionNumber());
-//        mtlManager.showAllManagedClass();
-//        mtlManager.showAllManagedFunction();
-        mtlManager.showExecutionSequence();
-    }
-
 }

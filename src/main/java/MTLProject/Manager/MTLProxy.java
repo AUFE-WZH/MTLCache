@@ -12,11 +12,11 @@ import java.util.*;
  * Cglib子类代理工厂
  * (对UserDao 在内存中动态构建一个子类对象)
  */
-public class ProxyFactory implements MethodInterceptor {
+public class MTLProxy implements MethodInterceptor {
     // 维护目标对象
     private Object target;
 
-    public ProxyFactory(Object target) {
+    public MTLProxy(Object target) {
         this.target = target;
     }
 
