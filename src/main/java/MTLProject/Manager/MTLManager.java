@@ -14,11 +14,15 @@ public class MTLManager {
     // 函数执行序列
     private List<MTLFunctionCache> executionSequence;
 
+    private MTLExecutionStackManager mtlExecutionStackManager;
+
     // 单例模式
     private MTLManager() {
         managedFunctionMap = new HashMap<>();
         classInstanceSet = new HashSet<>();
         executionSequence = new ArrayList<>();
+
+        mtlExecutionStackManager = new MTLExecutionStackManager();
     }
 
     private static class MTLManagerInstance{
@@ -35,11 +39,11 @@ public class MTLManager {
             Method setProxyMethod = target.getClass().getDeclaredMethod("setProxy", target.getClass());
             setProxyMethod.invoke(target, proxyInstance);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            System.out.println("setProxy method is not implemented");
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            System.out.println("setProxy method : invocation target exception");
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            System.out.println("setProxy method : illegal access exception");
         }
         classInstanceSet.add(target.getClass());
         return proxyInstance;
@@ -57,6 +61,8 @@ public class MTLManager {
             managedFunctionMap.put(mtlFunction, mtlFunctionCache);
             isExist = false;
         }
+
+        mtlExecutionStackManager.pushExecutionStack(managedFunctionMap.get(mtlFunction), isExist);
         executionSequence.add(managedFunctionMap.get(mtlFunction));
         return isExist;
     }
@@ -69,11 +75,16 @@ public class MTLManager {
         }
     }
 
-    void setMtlFunctionReturnValue(MTLFunction mtlFunction, Object returnValue, long executionTimeMS) {
+    void setMtlFunctionReturnValueAndManage(MTLFunction mtlFunction, boolean isExist, Object returnValue, long executionTimeMS) {
         if (managedFunctionMap.containsKey(mtlFunction)) {
             MTLFunctionCache mtlFunctionCache = managedFunctionMap.get(mtlFunction);
-            mtlFunctionCache.setMtlReturnValue(returnValue);
-            mtlFunctionCache.setExecutionTimeMS(executionTimeMS);
+            if (!isExist) {
+                mtlFunctionCache.setMtlReturnValue(returnValue);
+                mtlFunctionCache.setExecutionTimeMS(executionTimeMS);
+            }
+            mtlExecutionStackManager.popExecutionStack(mtlFunctionCache);
+        } else {
+            System.out.println("setMtlFunctionReturnValueAndManage error!");
         }
     }
 
@@ -154,5 +165,10 @@ public class MTLManager {
 
         }
         System.out.println("}");
+    }
+
+    public void showExecutionTree() {
+        MTLExecutionTree mtlExecutionTreeRoot = mtlExecutionStackManager.getMtlExecutionTreeRoot();
+        System.out.println("aa");
     }
 }

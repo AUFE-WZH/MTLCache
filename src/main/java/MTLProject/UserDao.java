@@ -1,7 +1,5 @@
 package MTLProject;
 
-import MTLProject.Manager.MTLManager;
-
 public class UserDao {
     private UserDao proxy;
 
@@ -30,12 +28,31 @@ public class UserDao {
 
     public void aFun() {
         System.out.println("UserDao aFun");
+        long result = 1;
+        for (int i = 1; i < 100000000; i++) {
+            result += i;
+        }
         proxy.bFun();
     }
 
     public void bFun() {
         System.out.println("UserDao bFun");
+        long result = 1;
+        for (int i = 1; i < 100000000; i++) {
+            result += i;
+        }
         proxy.fun1();
+    }
+
+    public void cFun() {
+        System.out.println("UserDao cFun");
+    }
+
+    public void dFun() {
+        System.out.println("UserDao dFun");
+        proxy.fun1();
+        proxy.add(1, 2);
+        proxy.aFun();
     }
 
 }

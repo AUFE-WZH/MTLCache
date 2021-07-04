@@ -43,26 +43,27 @@ public class MTLProxy implements MethodInterceptor {
         return MTLManager.getInstance().judgeExistAndManage(mtlFunction);
     }
 
-    private void postProcess(MTLFunction mtlFunction, Object returnValue, long executionTimeMS) {
-        MTLManager.getInstance().setMtlFunctionReturnValue(mtlFunction, returnValue, executionTimeMS);
+    private void postProcess(MTLFunction mtlFunction, boolean cacheFlag, Object returnValue, long executionTimeMS) {
+        MTLManager.getInstance().setMtlFunctionReturnValueAndManage(mtlFunction, cacheFlag, returnValue, executionTimeMS);
     }
 
     @Override
     public Object intercept(Object obj, Method method, Object[] args,
                             MethodProxy proxy) throws Throwable {
+        long startTime = System.currentTimeMillis();
         MTLFunction mtlFunction = getMTLFunction(target, method, args);
         boolean cacheFlag = preProcess(mtlFunction);
+        Object returnValue;
         // 已经缓存过了，直接返回返回值
         if (cacheFlag) {
-            return MTLManager.getInstance().getFunctionResultValue(mtlFunction);
+            returnValue = MTLManager.getInstance().getFunctionResultValue(mtlFunction);
         } else {
-            long startTime = System.currentTimeMillis();
             // 执行目标对象的方法
-            Object returnValue = method.invoke(target, args);
-            long endTime = System.currentTimeMillis();
-            postProcess(mtlFunction, returnValue, endTime - startTime);
-            return returnValue;
+            returnValue = method.invoke(target, args);
         }
+        long endTime = System.currentTimeMillis();
+        postProcess(mtlFunction, cacheFlag, returnValue, endTime - startTime);
+        return returnValue;
     }
 
 

@@ -62,8 +62,22 @@ public class MTLProjectTest {
         MTLManager mtlManager = MTLManager.getInstance();
         UserDao proxy = (UserDao) mtlManager.registerCacheClass(new UserDao());
         proxy.aFun();
+        proxy.aFun();
+        proxy.bFun();
+        proxy.bFun();
 //        mtlManager.showAllManagedClass();
 //        mtlManager.showAllManagedFunction();
         mtlManager.showExecutionSequence();
+    }
+
+    // 测试函数调用栈
+    @Test
+    public void test5() {
+        MTLManager mtlManager = MTLManager.getInstance();
+        UserDao proxy = (UserDao) mtlManager.registerCacheClass(new UserDao());
+//        proxy.aFun();
+//        proxy.dFun();
+
+        mtlManager.showExecutionTree();
     }
 }
