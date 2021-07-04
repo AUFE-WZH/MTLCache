@@ -50,11 +50,20 @@ public class MTLProjectTest {
         try {
             Person person = (Person) MTLStorage.readObjectFromFile("src/main/java/MTLProject/tttt.txt", Person.class);
             System.out.println(person.toString());
-        } catch (IOException e) {
-            System.out.println(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println(e);
         }
 
+    }
+
+    // 测试递归调用
+    @Test
+    public void test4() {
+        MTLManager mtlManager = MTLManager.getInstance();
+        UserDao proxy = (UserDao) mtlManager.registerCacheClass(new UserDao());
+        proxy.aFun();
+//        mtlManager.showAllManagedClass();
+//        mtlManager.showAllManagedFunction();
+        mtlManager.showExecutionSequence();
     }
 }

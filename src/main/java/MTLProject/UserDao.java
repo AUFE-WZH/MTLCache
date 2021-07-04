@@ -1,9 +1,14 @@
 package MTLProject;
 
 import MTLProject.Manager.MTLManager;
-import org.junit.Test;
 
 public class UserDao {
+    private UserDao proxy;
+
+    public void setProxy(UserDao proxy) {
+        this.proxy = proxy;
+    }
+
     public void save() {
         System.out.println("UserDao save");
     }
@@ -22,4 +27,15 @@ public class UserDao {
 
         return result;
     }
+
+    public void aFun() {
+        System.out.println("UserDao aFun");
+        proxy.bFun();
+    }
+
+    public void bFun() {
+        System.out.println("UserDao bFun");
+        proxy.fun1();
+    }
+
 }

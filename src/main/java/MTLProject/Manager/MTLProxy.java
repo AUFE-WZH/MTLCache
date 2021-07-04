@@ -50,7 +50,7 @@ public class MTLProxy implements MethodInterceptor {
     @Override
     public Object intercept(Object obj, Method method, Object[] args,
                             MethodProxy proxy) throws Throwable {
-        MTLFunction mtlFunction = getMTLFunction(obj, method, args);
+        MTLFunction mtlFunction = getMTLFunction(target, method, args);
         boolean cacheFlag = preProcess(mtlFunction);
         // 已经缓存过了，直接返回返回值
         if (cacheFlag) {

@@ -1,5 +1,7 @@
 package MTLProject.Manager;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class MTLManager {
@@ -29,6 +31,16 @@ public class MTLManager {
 
     public Object registerCacheClass(Object target) {
         Object proxyInstance = new MTLProxy(target).getProxyInstance();
+        try {
+            Method setProxyMethod = target.getClass().getDeclaredMethod("setProxy", target.getClass());
+            setProxyMethod.invoke(target, proxyInstance);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         classInstanceSet.add(target.getClass());
         return proxyInstance;
     }
